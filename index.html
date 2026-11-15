@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Midnight Romance – A Little Secret for Quỳnh Lam</title>
+<meta name="theme-color" content="#080B14">
+<link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+<!-- Font: tải từ Google Fonts. Muốn chạy offline hoàn toàn, xem README (mục "Chạy offline"). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Dancing+Script:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-scene="loading">
+
+<div id="loader"><div class="loader-logo">MIDNIGHT ROMANCE</div></div>
+
+<canvas id="sky" aria-hidden="true"></canvas>
+<div class="moon" id="moon" aria-hidden="true"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<div id="progress" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<div id="bloom" aria-hidden="true"></div>
+<div class="tools">
+  <button type="button" id="calmBtn" class="tool" aria-label="Giảm chuyển động" aria-pressed="false" title="Giảm chuyển động">◐</button>
+  <button type="button" id="musicBtn" class="tool off" aria-label="Bật nhạc nền" aria-pressed="false" title="Bật / tắt nhạc">♪</button>
+</div>
+
+<main>
+  <!-- ĐẾM NGƯỢC (hiện trước Phần 1 nếu chưa tới giờ mở) -->
+  <section class="scene" id="scene-countdown">
+    <div class="inner">
+      <h2 class="h2 rv seq" data-text="countdown.title"></h2>
+      <p class="lead rv seq" data-text="countdown.message"></p>
+      <div class="clock rv seq" role="timer" aria-label="Thời gian còn lại">
+        <div id="cdDays" hidden><b id="cdD">00</b><span>ngày</span></div>
+        <div><b id="cdH">00</b><span>giờ</span></div>
+        <div><b id="cdM">00</b><span>phút</span></div>
+        <div><b id="cdS">00</b><span>giây</span></div>
+      </div>
+      <p class="foot rv seq" id="cdAt"></p>
+    </div>
+  </section>
+
+  <!-- PHẦN 1 -->
+  <section class="scene" id="scene-begin">
+    <div class="inner">
+      <h1 class="title rv seq" data-text="begin.title"></h1>
+      <p class="script rv seq" data-text="begin.subtitle"></p>
+      <p class="lead rv seq" data-text="begin.greeting"></p>
+      <button type="button" class="btn primary rv seq" id="btnOpen" data-text="begin.button"></button>
+    </div>
+  </section>
+
+  <!-- PHẦN 2 -->
+  <section class="scene" id="scene-story">
+    <div class="inner">
+      <p class="story" id="storyP1"></p>
+      <p class="story" id="storyP2"></p>
+      <p class="story" id="storyP3"></p>
+      <p class="script big rv" id="storyClose" data-text="story.closing"></p>
+      <button type="button" class="btn rv" id="btnStory" data-text="story.button"></button>
+    </div>
+  </section>
+
+  <!-- PHẦN 3 -->
+  <section class="scene" id="scene-game">
+    <div class="inner">
+      <h2 class="h2" data-text="game.title"></h2>
+      <p class="lead" id="gameIntro" data-text="game.intro"></p>
+      <div class="quiz" id="quiz">
+        <div class="quiz-bar"><span id="quizCount">1/3</span><div class="track"><i id="quizFill"></i></div></div>
+        <div id="quizCard" class="quiz-card">
+          <p class="question" id="quizQ"></p>
+          <div class="options" id="quizOpts"></div>
+          <p class="feedback" id="quizFb"></p>
+        </div>
+        <div id="quizDone" class="quiz-done" hidden>
+          <p class="script big" data-text="game.done"></p>
+          <button type="button" class="btn primary" id="btnGift" data-text="game.button"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHẦN 4 -->
+  <section class="scene" id="scene-letter">
+    <div class="inner">
+      <div class="envelope-wrap" id="envWrap">
+        <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Mở phong bì thư">
+          <div class="env-back"></div>
+          <div class="env-front"></div>
+          <div class="env-flap"></div>
+          <div class="seal">♥</div>
+          <div class="env-to" data-text="letter.to"></div>
+          <div class="env-sub" data-text="letter.subtitle"></div>
+        </div>
+        <p class="hint" data-text="letter.hint"></p>
+      </div>
+      <article class="paper" id="paper" hidden>
+        <div id="paperBody"></div>
+        <p class="signature" id="paperSign"></p>
+      </article>
+      <button type="button" class="btn rv" id="btnLetter" data-text="letter.button" hidden></button>
+    </div>
+  </section>
+
+  <!-- PHẦN 5 -->
+  <section class="scene" id="scene-question">
+    <div class="inner">
+      <div class="glow-heart" aria-hidden="true">♥</div>
+      <div id="qPanel">
+        <p class="lead rv" id="qLead" data-text="question.lead"></p>
+        <h2 class="h2 big rv" id="qMain" data-text="question.main"></h2>
+        <div class="choices rv" id="qChoices">
+          <button type="button" class="btn primary" id="btnYes" data-text="question.yes"></button>
+          <button type="button" class="btn ghost" id="btnLater" data-text="question.later"></button>
+          <p class="notice" id="qNotice" data-text="notify.notice"></p>
+        </div>
+      </div>
+      <div class="answer" id="qAnswer" hidden>
+        <h2 class="h2 big" id="ansTitle"></h2>
+        <p class="lead" id="ansText"></p>
+        <button type="button" class="btn" id="btnToFinal" data-text="question.next"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHẦN 6 -->
+  <section class="scene" id="scene-final">
+    <div class="inner">
+      <p class="h2 rv seq" data-text="final.line1"></p>
+      <p class="script big rv seq" data-text="final.line2"></p>
+      <p class="lead rv seq tagline" data-text="final.tagline"></p>
+      <p class="foot rv seq"><span data-text="final.footer1"></span><br><span data-text="final.footer2"></span></p>
+      <button type="button" class="btn rv seq" id="btnReplay" data-text="final.replay"></button>
+    </div>
+  </section>
+</main>
+
+<div id="cursor" aria-hidden="true"></div>
+
+<script src="js/config.js"></script>
+<script src="js/countdown.js"></script>
+<script src="js/game.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
